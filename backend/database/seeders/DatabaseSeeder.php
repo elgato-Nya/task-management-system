@@ -13,11 +13,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create users
+        $users = User::factory(5)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Create a specific test user
+        $testUser = User::factory()->create([
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
+        ]);
+
+        // Create tasks and assign them to existing users
+        \App\Models\Task::factory(20)->create([
+            'user_id' => $users->random()->id,
+        ]);
+
+        // Create some tasks for the test user
+        \App\Models\Task::factory(5)->create([
+            'user_id' => $testUser->id,
         ]);
     }
 }
