@@ -4,7 +4,6 @@ import 'app_config.dart';
 class NetworkConfig {
   // API Endpoints
   static const String tasksEndpoint = '/tasks';
-  static const String usersEndpoint = '/users';
   static const String authEndpoint = '/auth';
 
   /// Get full API URL for a specific endpoint
@@ -35,22 +34,6 @@ class NetworkConfig {
   /// Get single task URL
   static String getTaskUrl(int taskId) {
     return '${getApiUrl(tasksEndpoint)}/$taskId';
-  }
-
-  /// Get users API URL with optional query parameters
-  static String getUsersUrl({int? page, String? search}) {
-    final uri = Uri.parse(getApiUrl(usersEndpoint));
-    final queryParams = <String, String>{};
-
-    if (page != null) queryParams['page'] = page.toString();
-    if (search != null && search.isNotEmpty) queryParams['search'] = search;
-
-    return uri.replace(queryParameters: queryParams).toString();
-  }
-
-  /// Get single user URL
-  static String getUserUrl(int userId) {
-    return '${getApiUrl(usersEndpoint)}/$userId';
   }
 
   // HTTP Status Codes

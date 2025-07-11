@@ -8,9 +8,6 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="fas fa-tasks"></i> Tasks</h1>
             <div>
-                <a href="{{ route('users.index') }}" class="btn btn-outline-secondary me-2">
-                    <i class="fas fa-users"></i> Manage Users
-                </a>
                 <a href="{{ route('tasks.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Add New Task
                 </a>

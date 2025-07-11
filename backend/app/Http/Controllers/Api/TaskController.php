@@ -14,7 +14,7 @@ class TaskController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = Task::with('user');
+        $query = Task::query();
         
         // Filter by status
         if ($request->filled('status')) {
@@ -52,8 +52,7 @@ class TaskController extends Controller
             'description' => 'nullable|string',
             'status' => 'required|in:pending,in_progress,completed',
             'priority' => 'required|in:low,medium,high',
-            'due_date' => 'nullable|date',
-            'user_id' => 'required|exists:users,id'
+            'due_date' => 'nullable|date'
         ]);
 
         $task = Task::create($request->all());
@@ -61,7 +60,7 @@ class TaskController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Task created successfully',
-            'data' => $task->load('user')
+            'data' => $task
         ], 201);
     }
 
@@ -72,7 +71,7 @@ class TaskController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => $task->load('user')
+            'data' => $task
         ]);
     }
 
@@ -86,8 +85,7 @@ class TaskController extends Controller
             'description' => 'nullable|string',
             'status' => 'required|in:pending,in_progress,completed',
             'priority' => 'required|in:low,medium,high',
-            'due_date' => 'nullable|date',
-            'user_id' => 'required|exists:users,id'
+            'due_date' => 'nullable|date'
         ]);
 
         $task->update($request->all());
@@ -95,7 +93,7 @@ class TaskController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Task updated successfully',
-            'data' => $task->load('user')
+            'data' => $task
         ]);
     }
 

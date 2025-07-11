@@ -5,7 +5,6 @@ import '../models/task.dart';
 import 'task_detail_screen.dart';
 import 'task_form_screen.dart';
 import 'debug_screen.dart';
-import 'user_list_screen.dart';
 import '../widgets/task_card.dart';
 import '../widgets/filter_sheet.dart';
 import '../widgets/theme_toggle.dart';
@@ -110,13 +109,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
-  void _showUsersScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const UserListScreen()),
-    );
-  }
-
   void _showAbout() {
     showDialog(
       context: context,
@@ -176,9 +168,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
             icon: const Icon(Icons.more_vert),
             onSelected: (value) {
               switch (value) {
-                case 'users':
-                  _showUsersScreen();
-                  break;
                 case 'theme_settings':
                   _showThemeSettings();
                   break;
@@ -191,16 +180,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'users',
-                child: Row(
-                  children: [
-                    Icon(Icons.people),
-                    SizedBox(width: 8),
-                    Text('Manage Users'),
-                  ],
-                ),
-              ),
               const PopupMenuItem(
                 value: 'theme_settings',
                 child: Row(

@@ -14,8 +14,7 @@ class Task extends Model
         'description',
         'status',
         'priority',
-        'due_date',
-        'user_id'
+        'due_date'
     ];
 
     protected $casts = [
@@ -23,12 +22,6 @@ class Task extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
-    // Relationship with User
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     // Scope for filtering by status
     public function scopeByStatus($query, $status)

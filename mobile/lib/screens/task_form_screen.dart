@@ -23,6 +23,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
   String _priority = 'medium';
   DateTime? _dueDate;
   bool _isLoading = false;
+  // Remove user-related variables
 
   final List<String> _statusOptions = ['pending', 'in_progress', 'completed'];
 
@@ -37,7 +38,9 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
       _status = widget.task!.status;
       _priority = widget.task!.priority;
       _dueDate = widget.task!.dueDate;
+      // Remove user assignment initialization
     }
+    // Remove user loading entirely
   }
 
   @override
@@ -101,7 +104,6 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
         status: _status,
         priority: _priority,
         dueDate: _dueDate,
-        userId: widget.task?.userId ?? 1, // Default user ID for now
         createdAt: widget.task?.createdAt ?? DateTime.now(),
         updatedAt: DateTime.now(),
       );

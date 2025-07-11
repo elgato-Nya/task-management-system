@@ -21,24 +21,13 @@ class StoreTaskRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'status' => 'required|in:pending,in_progress,completed',
             'priority' => 'required|in:low,medium,high',
             'due_date' => 'nullable|date|after_or_equal:today',
-            'user_assignment_type' => 'required|in:existing,new',
         ];
-
-        // Add conditional validation based on assignment type
-        if ($this->input('user_assignment_type') === 'existing') {
-            $rules['user_id'] = 'required|exists:users,id';
-        } elseif ($this->input('user_assignment_type') === 'new') {
-            $rules['new_user_name'] = 'required|string|max:255';
-            $rules['new_user_email'] = 'required|email|max:255|unique:users,email';
-        }
-
-        return $rules;
     }
 
     /**
@@ -54,12 +43,6 @@ class StoreTaskRequest extends FormRequest
             'priority.required' => 'Please select a task priority.',
             'priority.in' => 'The selected priority is invalid.',
             'due_date.after_or_equal' => 'The due date cannot be in the past.',
-            'user_id.required' => 'Please select a user for the task.',
-            'user_id.exists' => 'The selected user does not exist.',
-            'new_user_name.required' => 'The user name is required.',
-            'new_user_email.required' => 'The user email is required.',
-            'new_user_email.email' => 'Please enter a valid email address.',
-            'new_user_email.unique' => 'A user with this email already exists.',
         ];
     }
 
@@ -69,7 +52,6 @@ class StoreTaskRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'user_id' => 'assigned user',
             'due_date' => 'due date',
         ];
     }

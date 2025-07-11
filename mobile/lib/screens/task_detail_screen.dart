@@ -401,7 +401,6 @@ class TaskDetailScreen extends StatelessWidget {
           status: newStatus,
           priority: task.priority,
           dueDate: task.dueDate,
-          userId: task.userId,
           createdAt: task.createdAt,
           updatedAt: DateTime.now(),
         ),

@@ -14,7 +14,7 @@ class AppConfig {
   static const int itemsPerPage = 10;
 
   // Platform-specific API URLs
-  static const String _localhostUrl = 'http://localhost:8000/api';
+  static const String _localhostUrl = 'http://127.0.0.1:8000/api';
   static const String _androidEmulatorUrl = 'http://10.0.2.2:8000/api';
   static const String _iosSimulatorUrl = 'http://127.0.0.1:8000/api';
 

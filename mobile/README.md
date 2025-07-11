@@ -1,22 +1,35 @@
-# Mobile Task Management App (Flutter)
+# Personal Task Management App (Flutter)
 
-This is the Flutter mobile application for the Task Management System. It connects to the Laravel backend API to provide full CRUD functionality for managing tasks on mobile devices.
+A beautiful, modern Flutter mobile application for personal task management. Built with Material 3 design and integrated with Laravel backend API.
 
 ## 🚀 Features
 
-- **Task Management**: Create, read, update, and delete tasks
-- **Filtering**: Filter tasks by status and priority
-- **Search**: Search tasks by title or description
-- **User Assignment**: Assign tasks to users
-- **Priority Management**: Set task priorities (Low, Medium, High)
+### 📱 Core Functionality
+- **Task Management**: Create, edit, delete, and view tasks with ease
+- **Smart Filtering**: Filter tasks by status (pending, in progress, completed) and priority (low, medium, high)
+- **Search**: Quick search through task titles and descriptions
 - **Due Dates**: Set and track task deadlines
-- **Responsive UI**: Works on both phones and tablets
-- **Offline Support**: Cache tasks for offline viewing (when implemented)
+- **Task Status**: Visual status indicators with color coding
+- **Priority Levels**: Low, Medium, High priority with distinct visual representations
+
+### 🎨 User Interface
+- **Material 3 Design**: Modern, clean interface following latest Material Design guidelines
+- **Theme Support**: Light, dark, and system theme modes with persistent settings
+- **Responsive Layout**: Optimized for different screen sizes
+- **Smooth Animations**: Fluid transitions and micro-interactions
+- **Intuitive Navigation**: Easy-to-use navigation with bottom navigation bar
+
+### 🔄 Data Management
+- **API Integration**: Seamless communication with Laravel backend
+- **State Management**: Provider pattern for efficient state handling
+- **Local Storage**: Theme preferences and settings persistence
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Loading States**: Visual feedback during data operations
 
 ## 📋 Prerequisites
 
-- Flutter SDK (3.8.1 or later)
-- Dart SDK
+- Flutter SDK (3.16.0 or later)
+- Dart SDK (3.2.0 or later)
 - Android Studio / VS Code with Flutter extension
 - Android/iOS device or emulator
 - Laravel backend running (see backend README)
@@ -32,24 +45,85 @@ flutter pub get
 
 ### 2. Configure API Base URL
 
-Create or edit `lib/config/api_config.dart`:
+Update `lib/config/network_config.dart`:
 
 ```dart
-class ApiConfig {
+class NetworkConfig {
   // For Android emulator connecting to local Laravel server
-  static const String baseUrl = 'http://10.0.2.2:8000/api';
+  static const String baseUrl = 'http://10.0.2.2:8000';
   
   // For iOS simulator connecting to local Laravel server
-  // static const String baseUrl = 'http://127.0.0.1:8000/api';
+  // static const String baseUrl = 'http://127.0.0.1:8000';
   
   // For physical device on same network (replace with your computer's IP)
-  // static const String baseUrl = 'http://192.168.1.100:8000/api';
+  // static const String baseUrl = 'http://192.168.1.100:8000';
 }
 ```
 
 ### 3. Run the Application
 
 ```bash
+# Debug mode
+flutter run
+
+# Release mode
+flutter run --release
+```
+
+## 📁 Key Files
+
+```
+mobile/
+├── lib/
+│   ├── config/
+│   │   ├── app_config.dart           # App configuration
+│   │   ├── network_config.dart       # API endpoints
+│   │   └── theme_config.dart         # Theme configuration
+│   ├── models/
+│   │   └── task.dart                 # Task data model
+│   ├── providers/
+│   │   ├── task_provider.dart        # Task state management
+│   │   └── theme_provider.dart       # Theme state management
+│   ├── screens/
+│   │   ├── task_list_screen.dart     # Main task list
+│   │   ├── task_form_screen.dart     # Task creation/editing
+│   │   └── task_detail_screen.dart   # Task details view
+│   ├── services/
+│   │   └── api_service.dart          # API communication
+│   └── widgets/
+│       ├── task_card.dart            # Task display card
+│       └── common UI widgets
+│   └── main.dart                     # App entry point
+└── pubspec.yaml                      # Dependencies
+```
+
+## 🎯 Features Overview
+
+### Task Management
+- **Create Tasks**: Add new tasks with title, description, priority, and due date
+- **Edit Tasks**: Update existing tasks with full editing capabilities
+- **Delete Tasks**: Remove tasks with confirmation dialog
+- **Status Management**: Track task progress (pending, in progress, completed)
+- **Priority Levels**: Organize tasks by priority (low, medium, high)
+
+### User Interface
+- **Material 3 Design**: Modern, clean interface following latest design guidelines
+- **Theme Support**: Light, dark, and system theme modes
+- **Responsive Layout**: Works perfectly on different screen sizes
+- **Smooth Animations**: Fluid transitions and micro-interactions
+
+### Data & State Management
+- **Provider Pattern**: Efficient state management for tasks and themes
+- **API Integration**: Seamless communication with Laravel backend
+- **Local Storage**: Persistent theme preferences
+- **Error Handling**: User-friendly error messages and loading states
+
+## 🚨 Important Notes
+
+1. **Backend Required**: Make sure the Laravel backend is running at the configured API URL
+2. **API Configuration**: Update `network_config.dart` with correct backend URL
+3. **Permissions**: App may request internet permissions for API calls
+4. **Testing**: Use debug mode for development and testing
 # For Android
 flutter run
 

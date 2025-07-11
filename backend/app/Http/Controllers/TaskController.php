@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Models\User;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use Illuminate\Http\Request;
@@ -15,7 +14,7 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Task::with('user');
+        $query = Task::query();
         
         // Filter by status
         if ($request->filled('status')) {
@@ -45,8 +44,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $users = User::orderBy('name')->get();
-        return view('tasks.create', compact('users'));
+        return view('tasks.create');
     }
 
     /**
@@ -55,21 +53,6 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request)
     {
         $validated = $request->validated();
-        
-        // Handle user assignment
-        if ($request->input('user_assignment_type') === 'new') {
-            // Create new user
-            $user = User::create([
-                'name' => $validated['new_user_name'],
-                'email' => $validated['new_user_email'],
-                'password' => bcrypt('password'), // Default password, should be changed
-            ]);
-            
-            $validated['user_id'] = $user->id;
-        }
-        
-        // Remove the assignment type and new user fields from validated data
-        unset($validated['user_assignment_type'], $validated['new_user_name'], $validated['new_user_email']);
         
         Task::create($validated);
 
@@ -90,8 +73,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        $users = User::orderBy('name')->get();
-        return view('tasks.edit', compact('task', 'users'));
+        return view('tasks.edit', compact('task'));
     }
 
     /**
@@ -100,21 +82,6 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, Task $task)
     {
         $validated = $request->validated();
-        
-        // Handle user assignment
-        if ($request->input('user_assignment_type') === 'new') {
-            // Create new user
-            $user = User::create([
-                'name' => $validated['new_user_name'],
-                'email' => $validated['new_user_email'],
-                'password' => bcrypt('password'), // Default password, should be changed
-            ]);
-            
-            $validated['user_id'] = $user->id;
-        }
-        
-        // Remove the assignment type and new user fields from validated data
-        unset($validated['user_assignment_type'], $validated['new_user_name'], $validated['new_user_email']);
         
         $task->update($validated);
 

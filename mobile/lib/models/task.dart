@@ -1,5 +1,3 @@
-import 'user.dart';
-
 class Task {
   final int? id;
   final String title;
@@ -7,8 +5,6 @@ class Task {
   final String status;
   final String priority;
   final DateTime? dueDate;
-  final int userId;
-  final User? user;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -19,8 +15,6 @@ class Task {
     required this.status,
     required this.priority,
     this.dueDate,
-    required this.userId,
-    this.user,
     this.createdAt,
     this.updatedAt,
   });
@@ -32,11 +26,15 @@ class Task {
       description: json['description'],
       status: json['status'],
       priority: json['priority'],
-      dueDate: json['due_date'] != null ? DateTime.parse(json['due_date']) : null,
-      userId: json['user_id'],
-      user: json['user'] != null ? User.fromJson(json['user']) : null,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      dueDate: json['due_date'] != null
+          ? DateTime.parse(json['due_date'])
+          : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
     );
   }
 
@@ -48,12 +46,15 @@ class Task {
       'status': status,
       'priority': priority,
       'due_date': dueDate?.toIso8601String(),
-      'user_id': userId,
     };
   }
 
   // Helper methods for status and priority
-  static List<String> get statusOptions => ['pending', 'in_progress', 'completed'];
+  static List<String> get statusOptions => [
+    'pending',
+    'in_progress',
+    'completed',
+  ];
   static List<String> get priorityOptions => ['low', 'medium', 'high'];
 
   // Helper method to get status display name
@@ -88,8 +89,6 @@ class Task {
     String? status,
     String? priority,
     DateTime? dueDate,
-    int? userId,
-    User? user,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -100,8 +99,6 @@ class Task {
       status: status ?? this.status,
       priority: priority ?? this.priority,
       dueDate: dueDate ?? this.dueDate,
-      userId: userId ?? this.userId,
-      user: user ?? this.user,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
