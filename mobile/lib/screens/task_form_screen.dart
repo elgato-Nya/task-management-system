@@ -8,10 +8,7 @@ import '../config/app_theme.dart';
 class TaskFormScreen extends StatefulWidget {
   final Task? task;
 
-  const TaskFormScreen({
-    super.key,
-    this.task,
-  });
+  const TaskFormScreen({super.key, this.task});
 
   @override
   State<TaskFormScreen> createState() => _TaskFormScreenState();
@@ -21,23 +18,15 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   String _status = 'pending';
   String _priority = 'medium';
   DateTime? _dueDate;
   bool _isLoading = false;
 
-  final List<String> _statusOptions = [
-    'pending',
-    'in_progress', 
-    'completed',
-  ];
+  final List<String> _statusOptions = ['pending', 'in_progress', 'completed'];
 
-  final List<String> _priorityOptions = [
-    'low',
-    'medium',
-    'high',
-  ];
+  final List<String> _priorityOptions = ['low', 'medium', 'high'];
 
   @override
   void initState() {
@@ -85,7 +74,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
     );
-    
+
     if (picked != null) {
       setState(() {
         _dueDate = picked;
@@ -106,8 +95,8 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
       final task = Task(
         id: widget.task?.id,
         title: _titleController.text.trim(),
-        description: _descriptionController.text.trim().isEmpty 
-            ? null 
+        description: _descriptionController.text.trim().isEmpty
+            ? null
             : _descriptionController.text.trim(),
         status: _status,
         priority: _priority,
@@ -130,7 +119,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
         }
       } else {
         // Update existing task
-        await context.read<TaskProvider>().updateTask(task.id!, task);
+        await context.read<TaskProvider>().updateTask(task);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -173,7 +162,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
         actions: [
           TextButton(
             onPressed: _isLoading ? null : _saveTask,
-            child: _isLoading 
+            child: _isLoading
                 ? const SizedBox(
                     width: 20,
                     height: 20,
@@ -249,7 +238,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Status dropdown
                     DropdownButtonFormField<String>(
                       value: _status,
@@ -271,9 +260,9 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                         }
                       },
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Priority dropdown
                     DropdownButtonFormField<String>(
                       value: _priority,
@@ -334,9 +323,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                           vertical: 16,
                         ),
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: theme.colorScheme.outline,
-                          ),
+                          border: Border.all(color: theme.colorScheme.outline),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Row(
@@ -349,8 +336,9 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                             Expanded(
                               child: Text(
                                 _dueDate != null
-                                    ? DateFormat('EEEE, MMM dd, yyyy')
-                                        .format(_dueDate!)
+                                    ? DateFormat(
+                                        'EEEE, MMM dd, yyyy',
+                                      ).format(_dueDate!)
                                     : 'Select due date (optional)',
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: _dueDate != null

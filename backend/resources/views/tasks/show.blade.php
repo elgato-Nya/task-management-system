@@ -25,7 +25,7 @@
                         @if($task->description)
                             <div class="mb-4">
                                 <h5><i class="fas fa-align-left"></i> Description</h5>
-                                <p class="text-muted">{{ $task->description }}</p>
+                                <p class="text-body-secondary">{{ $task->description }}</p>
                             </div>
                         @endif
 
@@ -45,7 +45,7 @@
                                     </p>
                                 @else
                                     <h6><i class="fas fa-calendar"></i> Due Date</h6>
-                                    <p class="text-muted">No due date set</p>
+                                    <p class="text-body-secondary">No due date set</p>
                                 @endif
                             </div>
                         </div>

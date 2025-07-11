@@ -7,9 +7,14 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="fas fa-tasks"></i> Tasks</h1>
-            <a href="{{ route('tasks.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Add New Task
-            </a>
+            <div>
+                <a href="{{ route('users.index') }}" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-users"></i> Manage Users
+                </a>
+                <a href="{{ route('tasks.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add New Task
+                </a>
+            </div>
         </div>
 
         <!-- Filters -->
@@ -65,14 +70,14 @@
                                 <p class="card-text">{{ Str::limit($task->description, 100) }}</p>
                                 @if($task->due_date)
                                     <p class="card-text">
-                                        <small class="text-muted">
+                                        <small class="text-body-secondary">
                                             <i class="fas fa-calendar"></i> Due: {{ $task->due_date->format('M d, Y') }}
                                         </small>
                                     </p>
                                 @endif
                                 @if($task->user)
                                     <p class="card-text">
-                                        <small class="text-muted">
+                                        <small class="text-body-secondary">
                                             <i class="fas fa-user"></i> Assigned to: {{ $task->user->name }}
                                         </small>
                                     </p>
@@ -101,15 +106,15 @@
                 @endforeach
             </div>
 
-            <!-- Pagination -->
+            <!-- Enhanced Pagination -->
             <div class="mt-4">
-                {{ $tasks->appends(request()->query())->links('pagination::custom') }}
+                {{ $tasks->appends(request()->query())->links('pagination::bootstrap-5-enhanced') }}
             </div>
         @else
             <div class="text-center py-5">
-                <i class="fas fa-tasks fa-5x text-muted mb-3"></i>
-                <h3 class="text-muted">No tasks found</h3>
-                <p class="text-muted">Get started by creating your first task!</p>
+                <i class="fas fa-tasks fa-5x text-secondary mb-3"></i>
+                <h3 class="text-body-secondary">No tasks found</h3>
+                <p class="text-body-secondary">Get started by creating your first task!</p>
                 <a href="{{ route('tasks.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Create Task
                 </a>

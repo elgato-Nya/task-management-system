@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -33,7 +35,7 @@ class TaskController extends Controller
             });
         }
         
-        $tasks = $query->latest()->paginate(10);
+        $tasks = $query->latest()->paginate(12);
         
         return view('tasks.index', compact('tasks'));
     }
@@ -43,27 +45,36 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('tasks.create');
+        $users = User::orderBy('name')->get();
+        return view('tasks.create', compact('users'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:pending,in_progress,completed',
-            'priority' => 'required|in:low,medium,high',
-            'due_date' => 'nullable|date',
-            'user_id' => 'required|exists:users,id'
-        ]);
-
-        Task::create($request->all());
+        $validated = $request->validated();
+        
+        // Handle user assignment
+        if ($request->input('user_assignment_type') === 'new') {
+            // Create new user
+            $user = User::create([
+                'name' => $validated['new_user_name'],
+                'email' => $validated['new_user_email'],
+                'password' => bcrypt('password'), // Default password, should be changed
+            ]);
+            
+            $validated['user_id'] = $user->id;
+        }
+        
+        // Remove the assignment type and new user fields from validated data
+        unset($validated['user_assignment_type'], $validated['new_user_name'], $validated['new_user_email']);
+        
+        Task::create($validated);
 
         return redirect()->route('tasks.index')
-            ->with('success', 'Task created successfully.');
+            ->with('success', 'Task created successfully');
     }
 
     /**
@@ -79,27 +90,36 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view('tasks.edit', compact('task'));
+        $users = User::orderBy('name')->get();
+        return view('tasks.edit', compact('task', 'users'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:pending,in_progress,completed',
-            'priority' => 'required|in:low,medium,high',
-            'due_date' => 'nullable|date',
-            'user_id' => 'required|exists:users,id'
-        ]);
-
-        $task->update($request->all());
+        $validated = $request->validated();
+        
+        // Handle user assignment
+        if ($request->input('user_assignment_type') === 'new') {
+            // Create new user
+            $user = User::create([
+                'name' => $validated['new_user_name'],
+                'email' => $validated['new_user_email'],
+                'password' => bcrypt('password'), // Default password, should be changed
+            ]);
+            
+            $validated['user_id'] = $user->id;
+        }
+        
+        // Remove the assignment type and new user fields from validated data
+        unset($validated['user_assignment_type'], $validated['new_user_name'], $validated['new_user_email']);
+        
+        $task->update($validated);
 
         return redirect()->route('tasks.index')
-            ->with('success', 'Task updated successfully.');
+            ->with('success', 'Task updated successfully');
     }
 
     /**
@@ -110,6 +130,6 @@ class TaskController extends Controller
         $task->delete();
 
         return redirect()->route('tasks.index')
-            ->with('success', 'Task deleted successfully.');
+            ->with('success', 'Task deleted successfully');
     }
 }

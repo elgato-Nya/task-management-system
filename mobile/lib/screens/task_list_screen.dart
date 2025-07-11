@@ -4,6 +4,8 @@ import '../providers/task_provider.dart';
 import '../models/task.dart';
 import 'task_detail_screen.dart';
 import 'task_form_screen.dart';
+import 'debug_screen.dart';
+import 'user_list_screen.dart';
 import '../widgets/task_card.dart';
 import '../widgets/filter_sheet.dart';
 import '../widgets/theme_toggle.dart';
@@ -50,9 +52,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   void _performSearch(String query) {
     context.read<TaskProvider>().loadTasks(
-          search: query.isNotEmpty ? query : null,
-          refresh: true,
-        );
+      search: query.isNotEmpty ? query : null,
+      refresh: true,
+    );
   }
 
   void _showFilterSheet() {
@@ -73,9 +75,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   void _navigateToTaskForm([Task? task]) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => TaskFormScreen(task: task),
-      ),
+      MaterialPageRoute(builder: (context) => TaskFormScreen(task: task)),
     ).then((_) {
       // Refresh the list after creating/editing a task
       _refreshTasks();
@@ -85,9 +85,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   void _navigateToTaskDetail(Task task) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => TaskDetailScreen(task: task),
-      ),
+      MaterialPageRoute(builder: (context) => TaskDetailScreen(task: task)),
     ).then((_) {
       // Refresh the list in case the task was updated
       _refreshTasks();
@@ -102,6 +100,20 @@ class _TaskListScreenState extends State<TaskListScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) => const ThemeSettingsSheet(),
+    );
+  }
+
+  void _showDebugScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const DebugScreen()),
+    );
+  }
+
+  void _showUsersScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const UserListScreen()),
     );
   }
 
@@ -136,10 +148,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
             const Text('• Dark and light themes'),
             const Text('• Beautiful Material 3 design'),
             const SizedBox(height: 16),
-            Text(
-              'Version 1.0.0',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            Text('Version 1.0.0', style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
         actions: [
@@ -167,8 +176,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
             icon: const Icon(Icons.more_vert),
             onSelected: (value) {
               switch (value) {
+                case 'users':
+                  _showUsersScreen();
+                  break;
                 case 'theme_settings':
                   _showThemeSettings();
+                  break;
+                case 'debug':
+                  _showDebugScreen();
                   break;
                 case 'about':
                   _showAbout();
@@ -177,12 +192,32 @@ class _TaskListScreenState extends State<TaskListScreen> {
             },
             itemBuilder: (context) => [
               const PopupMenuItem(
+                value: 'users',
+                child: Row(
+                  children: [
+                    Icon(Icons.people),
+                    SizedBox(width: 8),
+                    Text('Manage Users'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
                 value: 'theme_settings',
                 child: Row(
                   children: [
                     Icon(Icons.palette),
                     SizedBox(width: 8),
                     Text('Theme Settings'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'debug',
+                child: Row(
+                  children: [
+                    Icon(Icons.bug_report),
+                    SizedBox(width: 8),
+                    Text('Debug Connection'),
                   ],
                 ),
               ),
@@ -233,9 +268,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
             child: Consumer<TaskProvider>(
               builder: (context, provider, child) {
                 if (provider.isLoading && provider.tasks.isEmpty) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (provider.error != null && provider.tasks.isEmpty) {
@@ -295,15 +328,13 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   child: ListView.builder(
                     controller: _scrollController,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: provider.tasks.length + 
-                        (provider.hasMorePages ? 1 : 0),
+                    itemCount:
+                        provider.tasks.length + (provider.hasMorePages ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index == provider.tasks.length) {
                         return const Padding(
                           padding: EdgeInsets.all(16.0),
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
+                          child: Center(child: CircularProgressIndicator()),
                         );
                       }
 
@@ -345,11 +376,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context);
+              final navigator = Navigator.of(context);
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              final taskProvider = context.read<TaskProvider>();
+
+              navigator.pop();
               try {
-                await context.read<TaskProvider>().deleteTask(task.id!);
+                await taskProvider.deleteTask(task.id!);
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  scaffoldMessenger.showSnackBar(
                     const SnackBar(
                       content: Text('Task deleted successfully'),
                       backgroundColor: Colors.green,
@@ -358,7 +393,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 }
               } catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  scaffoldMessenger.showSnackBar(
                     SnackBar(
                       content: Text('Failed to delete task: $e'),
                       backgroundColor: Colors.red,

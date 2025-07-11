@@ -9,17 +9,20 @@ import 'task_form_screen.dart';
 class TaskDetailScreen extends StatelessWidget {
   final Task task;
 
-  const TaskDetailScreen({
-    super.key,
-    required this.task,
-  });
+  const TaskDetailScreen({super.key, required this.task});
 
   Color _getPriorityColor(BuildContext context) {
-    return AppTheme.getPriorityColorThemed(task.priority, Theme.of(context).colorScheme);
+    return AppTheme.getPriorityColorThemed(
+      task.priority,
+      Theme.of(context).colorScheme,
+    );
   }
 
   Color _getStatusColor(BuildContext context) {
-    return AppTheme.getStatusColorThemed(task.status, Theme.of(context).colorScheme);
+    return AppTheme.getStatusColorThemed(
+      task.status,
+      Theme.of(context).colorScheme,
+    );
   }
 
   String _formatDate(DateTime? date) {
@@ -35,9 +38,10 @@ class TaskDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isOverdue = task.dueDate != null && 
-                      DateTime.now().isAfter(task.dueDate!) &&
-                      task.status.toLowerCase() != 'completed';
+    final isOverdue =
+        task.dueDate != null &&
+        DateTime.now().isAfter(task.dueDate!) &&
+        task.status.toLowerCase() != 'completed';
 
     return Scaffold(
       appBar: AppBar(
@@ -72,11 +76,17 @@ class TaskDetailScreen extends StatelessWidget {
                 value: 'toggle_status',
                 child: Row(
                   children: [
-                    Icon(task.status.toLowerCase() == 'completed' 
-                        ? Icons.undo : Icons.check_circle),
+                    Icon(
+                      task.status.toLowerCase() == 'completed'
+                          ? Icons.undo
+                          : Icons.check_circle,
+                    ),
                     const SizedBox(width: 8),
-                    Text(task.status.toLowerCase() == 'completed' 
-                        ? 'Mark Incomplete' : 'Mark Complete'),
+                    Text(
+                      task.status.toLowerCase() == 'completed'
+                          ? 'Mark Incomplete'
+                          : 'Mark Complete',
+                    ),
                   ],
                 ),
               ),
@@ -179,12 +189,12 @@ class TaskDetailScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: _getStatusColor(context).withAlpha(26),
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: _getStatusColor(context)),
+                              border: Border.all(
+                                color: _getStatusColor(context),
+                              ),
                             ),
                             child: Text(
-                              task.status
-                                  .replaceAll('_', ' ')
-                                  .toUpperCase(),
+                              task.status.replaceAll('_', ' ').toUpperCase(),
                               style: theme.textTheme.labelMedium?.copyWith(
                                 color: _getStatusColor(context),
                                 fontWeight: FontWeight.bold,
@@ -219,7 +229,9 @@ class TaskDetailScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: _getPriorityColor(context).withAlpha(26),
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: _getPriorityColor(context)),
+                              border: Border.all(
+                                color: _getPriorityColor(context),
+                              ),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -333,15 +345,13 @@ class TaskDetailScreen extends StatelessWidget {
     bool isOverdue = false,
   }) {
     final theme = Theme.of(context);
-    
+
     return Row(
       children: [
         Icon(
           icon,
           size: 20,
-          color: isOverdue 
-              ? Colors.red 
-              : theme.colorScheme.onSurfaceVariant,
+          color: isOverdue ? Colors.red : theme.colorScheme.onSurfaceVariant,
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -371,22 +381,19 @@ class TaskDetailScreen extends StatelessWidget {
   void _navigateToEdit(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => TaskFormScreen(task: task),
-      ),
+      MaterialPageRoute(builder: (context) => TaskFormScreen(task: task)),
     ).then((_) {
       // Refresh would be handled by the calling screen
     });
   }
 
   void _toggleTaskStatus(BuildContext context) async {
-    final newStatus = task.status.toLowerCase() == 'completed' 
-        ? 'pending' 
+    final newStatus = task.status.toLowerCase() == 'completed'
+        ? 'pending'
         : 'completed';
-    
+
     try {
       await context.read<TaskProvider>().updateTask(
-        task.id!,
         Task(
           id: task.id,
           title: task.title,
@@ -399,13 +406,13 @@ class TaskDetailScreen extends StatelessWidget {
           updatedAt: DateTime.now(),
         ),
       );
-      
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              newStatus == 'completed' 
-                  ? 'Task marked as completed!' 
+              newStatus == 'completed'
+                  ? 'Task marked as completed!'
                   : 'Task marked as incomplete',
             ),
             backgroundColor: Colors.green,

@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
         $users = User::factory(5)->create();
 
         // Create a specific test user
-        $testUser = User::factory()->create([
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-        ]);
+        // $testUser = User::factory()->create([
+        //     'name' => 'John Doe',
+        //     'email' => 'john@example.com',
+        // ]);
 
         // Create tasks and assign them to existing users
         \App\Models\Task::factory(20)->create([
@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Create some tasks for the test user
-        \App\Models\Task::factory(5)->create([
-            'user_id' => $testUser->id,
-        ]);
+        // \App\Models\Task::factory(5)->create([
+        //     'user_id' => $testUser->id,
+        // ]);
     }
 }

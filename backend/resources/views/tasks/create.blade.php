@@ -77,19 +77,59 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="user_id" class="form-label">Assign to User <span class="text-danger">*</span></label>
-                                <select class="form-select @error('user_id') is-invalid @enderror" 
-                                        id="user_id" name="user_id" required>
-                                    <option value="">Select User</option>
-                                    @foreach(\App\Models\User::all() as $user)
-                                        <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                            {{ $user->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('user_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <label for="user_assignment_type" class="form-label">User Assignment <span class="text-danger">*</span></label>
+                                <div class="mb-2">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="user_assignment_type" 
+                                               id="existing_user" value="existing" checked onchange="toggleUserInput()">
+                                        <label class="form-check-label" for="existing_user">
+                                            Select Existing User
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="user_assignment_type" 
+                                               id="new_user" value="new" onchange="toggleUserInput()">
+                                        <label class="form-check-label" for="new_user">
+                                            Add New User
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Existing User Selection -->
+                                <div id="existing_user_section">
+                                    <select class="form-select @error('user_id') is-invalid @enderror" 
+                                            id="user_id" name="user_id">
+                                        <option value="">Select User</option>
+                                        @foreach(\App\Models\User::orderBy('name')->get() as $user)
+                                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                                {{ $user->name }} ({{ $user->email }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('user_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                
+                                <!-- New User Input -->
+                                <div id="new_user_section" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control @error('new_user_name') is-invalid @enderror" 
+                                                   id="new_user_name" name="new_user_name" placeholder="User Name" value="{{ old('new_user_name') }}">
+                                            @error('new_user_name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="email" class="form-control @error('new_user_email') is-invalid @enderror" 
+                                                   id="new_user_email" name="new_user_email" placeholder="User Email" value="{{ old('new_user_email') }}">
+                                            @error('new_user_email')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -107,4 +147,40 @@
         </div>
     </div>
 </div>
+
+<script>
+function toggleUserInput() {
+    const existingUserRadio = document.getElementById('existing_user');
+    const newUserRadio = document.getElementById('new_user');
+    const existingUserSection = document.getElementById('existing_user_section');
+    const newUserSection = document.getElementById('new_user_section');
+    const userSelect = document.getElementById('user_id');
+    const newUserName = document.getElementById('new_user_name');
+    const newUserEmail = document.getElementById('new_user_email');
+    
+    if (existingUserRadio.checked) {
+        existingUserSection.style.display = 'block';
+        newUserSection.style.display = 'none';
+        userSelect.required = true;
+        newUserName.required = false;
+        newUserEmail.required = false;
+        // Clear new user fields
+        newUserName.value = '';
+        newUserEmail.value = '';
+    } else if (newUserRadio.checked) {
+        existingUserSection.style.display = 'none';
+        newUserSection.style.display = 'block';
+        userSelect.required = false;
+        newUserName.required = true;
+        newUserEmail.required = true;
+        // Clear existing user selection
+        userSelect.value = '';
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    toggleUserInput();
+});
+</script>
 @endsection

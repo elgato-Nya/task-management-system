@@ -24,7 +24,7 @@ class _FilterSheetState extends State<FilterSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: EdgeInsets.only(
         top: 20,
@@ -52,9 +52,9 @@ class _FilterSheetState extends State<FilterSheet> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // Status filter
           Text(
             'Status',
@@ -88,9 +88,9 @@ class _FilterSheetState extends State<FilterSheet> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // Priority filter
           Text(
             'Priority',
@@ -127,9 +127,9 @@ class _FilterSheetState extends State<FilterSheet> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 30),
-          
+
           // Action buttons
           Row(
             children: [
@@ -149,10 +149,10 @@ class _FilterSheetState extends State<FilterSheet> {
                 child: ElevatedButton(
                   onPressed: () {
                     context.read<TaskProvider>().loadTasks(
-                          status: _selectedStatus,
-                          priority: _selectedPriority,
-                          refresh: true,
-                        );
+                      status: _selectedStatus,
+                      priority: _selectedPriority,
+                      refresh: true,
+                    );
                     Navigator.pop(context);
                   },
                   child: const Text('Apply Filters'),
@@ -172,14 +172,11 @@ class _FilterSheetState extends State<FilterSheet> {
     Color? color,
   }) {
     final theme = Theme.of(context);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 8,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
               ? (color ?? theme.colorScheme.primary)
